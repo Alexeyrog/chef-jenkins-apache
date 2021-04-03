@@ -1,0 +1,40 @@
+gem install chef net-ssh net-ssh-multi fog highline
+
+git clone git://github.com/opscode/chef-repo.git
+
+cp USERNAME.pem ORGANIZATION-validator.pem knife.rb .chef
+
+knife.rb:
+ knife[:aws_access_key_id]     = "Your AWS Access Key"
+ knife[:aws_secret_access_key] = "Your AWS Secret Access Key" 
+
+
+knife supermarket download apache2
+
+roles/webserver:
+ name "webserver"
+description "An Apache server"
+run_list(%w{
+  recipe[apache2]
+})
+
+knife cookbook upload apache2
+knife role from file roles/webserver.rb
+
+knife ec2 server create "role[webserver]" --image ami-042e8287309f5df03 \
+   --groups chef --ssh-user ubuntu --ssh-key chef-kp.pem
+
+~/.ssh/config and add
+ 
+ Host ec2*compute-1.amazonaws.com
+  StrictHostKeyChecking no
+  User ubuntu
+  IdentityFile  /home/alexey/.ssh/chef-kp.pem
+
+
+AKIA3L5EYW6OPCNHOB4V
+
+6iX3jhROzKhmN7g8lGR91PCj8nFV0o9mkbmsR3nZ
+
+
+ami-042e8287309f5df03
